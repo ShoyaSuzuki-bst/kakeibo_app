@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.kakeibo_app">
+    package="com.shoya.kakeibo">
    <application
         android:label="kakeibo_app"
         android:name="${applicationName}"
