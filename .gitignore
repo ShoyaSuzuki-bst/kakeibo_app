@@ -48,3 +48,4 @@ app.*.map.json
 # 追記
 GoogleService-Info.plist
 google-services.json
+.vscode

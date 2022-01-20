@@ -42,7 +42,8 @@ dev_dependencies:
   firebase_core: ^1.0.4
   firebase_auth: ^1.1.1
   google_sign_in: ^5.0.2
-  flutter_signin_button: ^1.1.0
+  flutter_signin_button: ^2.0.0
+  http: ^0.13.4
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
