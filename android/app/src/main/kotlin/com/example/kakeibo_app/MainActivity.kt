@@ -1,4 +1,4 @@
-package com.example.kakeibo_app
+package com.shoya.kakeibo
 
 import io.flutter.embedding.android.FlutterActivity
 
