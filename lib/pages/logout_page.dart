@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakeibo_app/modules/kakeibo_server_client.dart';
-import 'LoginPage.dart';
+import 'login_page.dart';
 
 class LogoutPage extends StatelessWidget {
   String user_name = '';
@@ -26,9 +26,6 @@ class LogoutPage extends StatelessWidget {
             SizedBox(height: 20),
             TextButton(
               onPressed: () async {
-                print(FirebaseAuth.instance.currentUser);
-                String token = await FirebaseAuth.instance.currentUser!.getIdToken();
-                await KakeiboServerClient.signOut(token);
                 await FirebaseAuth.instance.signOut();
                 await Navigator.of(context)
                     .pushReplacement(MaterialPageRoute(builder: (context) {
