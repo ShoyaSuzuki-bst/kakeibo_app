@@ -53,6 +53,22 @@ class LoginPage extends StatelessWidget {
                             return LogoutPage(res['name']);
                           }),
                         );
+                      }else{
+                        showDialog(
+                          context: context,
+                          builder: (_) {
+                            return AlertDialog(
+                              title: const Text("エラー"),
+                              content: Text(res['message']),
+                              actions: <Widget>[
+                                FlatButton(
+                                  child: Text("OK"),
+                                  onPressed: () => Navigator.pop(context),
+                                ),
+                              ],
+                            );
+                          },
+                        );
                       }
                     }
                   },
@@ -86,6 +102,22 @@ class LoginPage extends StatelessWidget {
                             // return InputPayment();
                             return LogoutPage(res['name']);
                           }),
+                        );
+                      }else{
+                        showDialog(
+                          context: context,
+                          builder: (_) {
+                            return AlertDialog(
+                              title: const Text("エラー"),
+                              content: Text(res['message']),
+                              actions: <Widget>[
+                                FlatButton(
+                                  child: Text("OK"),
+                                  onPressed: () => Navigator.pop(context),
+                                ),
+                              ],
+                            );
+                          },
                         );
                       }
                     }
