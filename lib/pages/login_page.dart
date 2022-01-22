@@ -34,23 +34,19 @@ class LoginPage extends StatelessWidget {
                   onPressed: () async {
                     GoogleSignInAccount? signinAccount = await googleLogin.signIn();
                     if (signinAccount == null) return;
-                    GoogleSignInAuthentication auth =
-                        await signinAccount.authentication;
+                    GoogleSignInAuthentication auth = await signinAccount.authentication;
                     final OAuthCredential credential = GoogleAuthProvider.credential(
                       idToken: auth.idToken,
                       accessToken: auth.accessToken,
                     );
-                    User? user =
-                        (await FirebaseAuth.instance.signInWithCredential(credential))
-                            .user;
+                    User? user = (await FirebaseAuth.instance.signInWithCredential(credential)).user;
                     if (user != null) {
                       String token = await user.getIdToken();
                       final res = await KakeiboServerClient.getUser(token);
                       if (res['status'] == 200) {
                         await Navigator.of(context).pushReplacement(
                           MaterialPageRoute(builder: (context) {
-                            // return InputPayment();
-                            return LogoutPage(res['name']);
+                            return InputPayment();
                           }),
                         );
                       }else{
@@ -58,7 +54,12 @@ class LoginPage extends StatelessWidget {
                           context: context,
                           builder: (_) {
                             return AlertDialog(
-                              title: const Text("エラー"),
+                              title: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const <Widget>[
+                                  Text("エラー"),
+                                ]
+                              ),
                               content: Text(res['message']),
                               actions: <Widget>[
                                 FlatButton(
@@ -99,8 +100,7 @@ class LoginPage extends StatelessWidget {
                       if (res['status'] == 200) {
                         await Navigator.of(context).pushReplacement(
                           MaterialPageRoute(builder: (context) {
-                            // return InputPayment();
-                            return LogoutPage(res['name']);
+                            return InputPayment();
                           }),
                         );
                       }else{
@@ -108,7 +108,12 @@ class LoginPage extends StatelessWidget {
                           context: context,
                           builder: (_) {
                             return AlertDialog(
-                              title: const Text("エラー"),
+                              title: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const <Widget>[
+                                  Text("エラー"),
+                                ]
+                              ),
                               content: Text(res['message']),
                               actions: <Widget>[
                                 FlatButton(
