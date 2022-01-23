@@ -66,7 +66,6 @@ class KakeiboServerClient {
       'price': price,
       'is_income': isIncome
     };
-    print(body);
     final encodedBody = json.encode(body);
     final res = await http.post(
       Uri.parse("$baseUri/payments"),
@@ -76,5 +75,20 @@ class KakeiboServerClient {
     var decodedRes = await json.decode(res.body);
     decodedRes['status'] = res.statusCode;
     return decodedRes;
+  }
+
+  static Future<Map<String, dynamic>> getPayments(token) async {
+    Map<String, dynamic> result = {};
+    final headers = {
+      "Content-Type": "application/json",
+      'authorization': "Bearer $token"
+    };
+    final res = await http.get(
+      Uri.parse("$baseUri/payments"),
+      headers: headers
+    );
+    result['data'] = await json.decode(res.body);
+    result['status'] = res.statusCode;
+    return result;
   }
 }

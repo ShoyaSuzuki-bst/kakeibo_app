@@ -11,15 +11,9 @@ class InputPayment extends StatefulWidget {
 class _InputPaymentState extends State<InputPayment> {
   bool _isIncome = false;
   String _price = '';
-  String _income = '支出';
 
   void _handleRadio(bool? v) => setState(() {
     v != null ? _isIncome = v : _isIncome = false;
-    if(_isIncome) {
-      _income = '収入';
-    }else{
-      _income = '支出';
-    }
   });
 
   void _changePrice(price) {
@@ -29,7 +23,6 @@ class _InputPaymentState extends State<InputPayment> {
   }
 
   void _submitValue() async {
-    print('called function');
     String token = await FirebaseAuth.instance.currentUser!.getIdToken();
     final res = await KakeiboServerClient.createPayment(token, int.parse(_price), _isIncome);
     if (res['status'] == 200) {
@@ -79,75 +72,63 @@ class _InputPaymentState extends State<InputPayment> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('支出登録'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              _income,
-              style: const TextStyle(
-                fontSize: 100,
-              )
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Radio(
-                  activeColor: Colors.blue,
-                  value: false,
-                  groupValue: _isIncome,
-                  onChanged: _handleRadio,
-                ),
-                const Text('支出'),
-                Radio(
-                  activeColor: Colors.blue,
-                  value: true,
-                  groupValue: _isIncome,
-                  onChanged: _handleRadio,
-                ),
-                const Text('収入'),
-              ]
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const Text('¥', style: TextStyle(fontSize: 50)),
-                SizedBox(
-                  width: 250,
-                  child: TextField(
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    autofocus: true,
-                    onChanged: (text) {
-                      _changePrice(text);
-                    },
-                    style: const TextStyle(
-                      fontSize: 40
-                    )
-                  ),
-                ),
-              ]
-            ),
-            RaisedButton(
-              onPressed: _price == '' ? null :  () {
-                print('pressed');
-                _submitValue();
-              },
-              color: Colors.blue,
-              child: const Text(
-                '保存',
-                style: TextStyle(
-                    color:Colors.white,
-                    fontSize: 20.0
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Radio(
+                activeColor: Colors.blue,
+                value: false,
+                groupValue: _isIncome,
+                onChanged: _handleRadio,
+              ),
+              const Text('支出'),
+              Radio(
+                activeColor: Colors.blue,
+                value: true,
+                groupValue: _isIncome,
+                onChanged: _handleRadio,
+              ),
+              const Text('収入'),
+            ]
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const Text('¥', style: TextStyle(fontSize: 50)),
+              SizedBox(
+                width: 250,
+                child: TextField(
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  autofocus: true,
+                  onChanged: (text) {
+                    _changePrice(text);
+                  },
+                  style: const TextStyle(
+                    fontSize: 40
+                  )
                 ),
               ),
-            )
-          ]
-        ),
+            ]
+          ),
+          RaisedButton(
+            onPressed: _price == '' ? null :  () {
+              _submitValue();
+            },
+            color: Colors.blue,
+            child: const Text(
+              '保存',
+              style: TextStyle(
+                  color:Colors.white,
+                  fontSize: 20.0
+              ),
+            ),
+          )
+        ]
       ),
     );
   }

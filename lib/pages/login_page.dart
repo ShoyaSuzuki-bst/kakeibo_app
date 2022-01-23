@@ -3,8 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:kakeibo_app/modules/kakeibo_server_client.dart';
-import 'logout_page.dart';
-import 'input_payment.dart';
+import 'base_page.dart';
 
 class LoginPage extends StatelessWidget {
   static final googleLogin = GoogleSignIn(scopes: [
@@ -46,7 +45,7 @@ class LoginPage extends StatelessWidget {
                       if (res['status'] == 200) {
                         await Navigator.of(context).pushReplacement(
                           MaterialPageRoute(builder: (context) {
-                            return InputPayment();
+                            return BasePage();
                           }),
                         );
                       }else{
@@ -100,7 +99,7 @@ class LoginPage extends StatelessWidget {
                       if (res['status'] == 200) {
                         await Navigator.of(context).pushReplacement(
                           MaterialPageRoute(builder: (context) {
-                            return InputPayment();
+                            return BasePage();
                           }),
                         );
                       }else{
