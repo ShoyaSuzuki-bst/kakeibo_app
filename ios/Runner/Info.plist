@@ -42,6 +42,8 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-1782649289767849~8101223438</string>	
 	<false/>
 	<key>CFBundleURLTypes</key>
 	<array>
