@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:kakeibo_app/modules/kakeibo_server_client.dart';
+import 'package:kakeibo_app/parts/bottom_banner_ad.dart';
 import 'input_payment.dart';
 import 'index_payments.dart';
 import 'current_user.dart';
@@ -44,10 +45,16 @@ class _BasePageState extends State<BasePage> {
           });
         },
         children: [
-          InputPayment(), //call pages
+          InputPayment(),
           IndexPayments(payments: _payments, getPayments: _getPayments),
           CurrentUser(),
         ]
+      ),
+      bottomSheet: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          BottomBannerAd(),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         onTap: (int index) { // define animation
