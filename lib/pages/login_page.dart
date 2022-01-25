@@ -163,12 +163,12 @@ class _LoginPage extends State<LoginPage> {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           SignInButton(
-                            Buttons.Google,
+                            Buttons.GoogleDark,
                             text: 'Googleでログイン',
                             onPressed: _signIn,
                           ),
                           SignInButton(
-                            Buttons.Google,
+                            Buttons.GoogleDark,
                             text: 'Googleでアカウント作成',
                             onPressed: _signUp,
                           ),
