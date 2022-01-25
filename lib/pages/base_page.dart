@@ -59,7 +59,9 @@ class _BasePageState extends State<BasePage> {
                 });
               },
               children: [
-                InputPayment(loadingHandler: _loadingHandler),
+                InputPayment(
+                  loadingHandler: _loadingHandler
+                ),
                 IndexPayments(
                   payments: _payments,
                   getPayments: _getPayments,
