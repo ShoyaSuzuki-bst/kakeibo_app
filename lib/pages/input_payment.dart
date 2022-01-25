@@ -4,6 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:kakeibo_app/modules/kakeibo_server_client.dart';
 
 class InputPayment extends StatefulWidget {
+  InputPayment({
+    Key? key,
+    required this.loadingHandler,
+  }) : super(key: key);
+
+  final loadingHandler;
   @override
   _InputPaymentState createState() => _InputPaymentState();
 }
@@ -23,8 +29,10 @@ class _InputPaymentState extends State<InputPayment> {
   }
 
   void _submitValue() async {
+    widget.loadingHandler(true);
     String token = await FirebaseAuth.instance.currentUser!.getIdToken();
     final res = await KakeiboServerClient.createPayment(token, int.parse(_price), _isIncome);
+    widget.loadingHandler(false);
     if (res['status'] == 200) {
       showDialog(
         context: context,
@@ -80,7 +88,7 @@ class _InputPaymentState extends State<InputPayment> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Radio(
-                activeColor: Colors.blue,
+                activeColor: Theme.of(context).primaryColor,
                 value: false,
                 groupValue: _isIncome,
                 onChanged: _handleRadio,
@@ -119,7 +127,7 @@ class _InputPaymentState extends State<InputPayment> {
             onPressed: _price == '' ? null :  () {
               _submitValue();
             },
-            color: Colors.blue,
+            color: Theme.of(context).primaryColor,
             child: const Text(
               '保存',
               style: TextStyle(

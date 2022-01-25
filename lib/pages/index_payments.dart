@@ -4,11 +4,13 @@ class IndexPayments extends StatefulWidget {
   IndexPayments({
     Key? key,
     required this.payments,
-    required this.getPayments
+    required this.getPayments,
+    required this.loadingHandler,
   }) : super(key: key);
 
   List payments;
   final getPayments;
+  final loadingHandler;
   @override
   _IndexPayments createState() => _IndexPayments();
 }
@@ -36,7 +38,7 @@ class _IndexPayments extends State<IndexPayments> {
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 21,
-                  color: v['is_income'] ? Colors.green : Colors.red
+                  color: v['is_income'] ? Colors.blue : Colors.red
                 ),
               ),
             )
