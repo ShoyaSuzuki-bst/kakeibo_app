@@ -58,8 +58,8 @@ class _LoginPage extends State<LoginPage> {
               ),
               content: Text(res['message']),
               actions: <Widget>[
-                FlatButton(
-                  child: Text("OK"),
+                TextButton(
+                  child: const Text("OK"),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
@@ -110,8 +110,8 @@ class _LoginPage extends State<LoginPage> {
               ),
               content: Text(res['message']),
               actions: <Widget>[
-                FlatButton(
-                  child: Text("OK"),
+                TextButton(
+                  child: const Text("OK"),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
