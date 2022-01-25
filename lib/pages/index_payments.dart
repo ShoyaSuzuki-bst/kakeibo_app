@@ -4,46 +4,62 @@ class IndexPayments extends StatefulWidget {
   IndexPayments({
     Key? key,
     required this.payments,
-    required this.getPayments
+    required this.getPayments,
+    required this.loadingHandler,
   }) : super(key: key);
 
   List payments;
   final getPayments;
+  final loadingHandler;
   @override
   _IndexPayments createState() => _IndexPayments();
 }
 
 class _IndexPayments extends State<IndexPayments> {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget> [
-        Container(
-          margin: const EdgeInsets.only(top: 10),
-          child: FloatingActionButton(
-            onPressed: () async {
-              await widget.getPayments();
-            },
-            tooltip: 'Increment',
-            child: const Icon(Icons.replay),
+  Widget _paymentItem(int price, bool isIncome) {
+    return GestureDetector(
+      child:Container(
+        padding: const EdgeInsets.all(15.0),
+        decoration: const BoxDecoration(
+          border: Border(
+            bottom: BorderSide(width: 1.0, color: Colors.grey)
           ),
         ),
-        Column(
-          children: widget.payments != [] ? widget.payments.map((v) =>
-            ListTile(
-              title: Text(
-                v['is_income'] ? "収入 ¥${v['price']}" : "支出 ¥${v['price']}",
-                style: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 21,
-                  color: v['is_income'] ? Colors.green : Colors.red
-                ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            const Text(
+              'yyyy/mm/dd hh:mm',
+              style: TextStyle(
+                fontSize: 20,
               ),
-            )
-          ).toList():
-          <Widget>[const Text('Loading now...')],
-        ),
-      ],
+            ),
+            Text(
+              isIncome ? "+ ¥$price" : "- ¥$price",
+              style: TextStyle(
+                color: isIncome ? Colors.blue : Colors.red,
+                fontSize: 20,
+              ),
+            ),
+          ],
+        )
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RefreshIndicator(
+      onRefresh: () async {
+        await widget.getPayments();
+      },
+      child: ListView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        children: widget.payments != [] ? widget.payments.map((v) =>
+          _paymentItem(v['price'], v['is_income'])
+        ).toList():
+        <Widget>[const Text('Loading now...')],
+      ),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:kakeibo_app/modules/kakeibo_server_client.dart';
 import 'package:kakeibo_app/parts/bottom_banner_ad.dart';
+import 'package:kakeibo_app/parts/loading.dart';
 import 'input_payment.dart';
 import 'index_payments.dart';
 import 'current_user.dart';
@@ -14,6 +15,7 @@ class BasePage extends StatefulWidget {
 class _BasePageState extends State<BasePage> {
   int _index = 0;
   List _payments = [];
+  bool _isLoading = false;
   PageController _pageController = PageController();
 
   void _getPayments() async {
@@ -21,6 +23,12 @@ class _BasePageState extends State<BasePage> {
     final res = await KakeiboServerClient.getPayments(token);
     setState(() {
       _payments = res['data'];
+    });
+  }
+
+  void _loadingHandler(bool v) {
+    setState(() {
+      _isLoading = v;
     });
   }
 
@@ -37,18 +45,33 @@ class _BasePageState extends State<BasePage> {
       appBar: AppBar(
         title: const Text('My Flutter App'),
       ),
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: (int index) {
-          setState(() {
-            this._index = index;
-          });
-        },
-        children: [
-          InputPayment(),
-          IndexPayments(payments: _payments, getPayments: _getPayments),
-          CurrentUser(),
-        ]
+      body: ClipRect(
+        child: Stack(
+          fit: StackFit.expand,
+          overflow: Overflow.clip,
+          children: <Widget>[
+            OverlayLoadingMolecules(isVisible: _isLoading),
+            PageView(
+              controller: _pageController,
+              onPageChanged: (int index) {
+                setState(() {
+                  this._index = index;
+                });
+              },
+              children: [
+                InputPayment(
+                  loadingHandler: _loadingHandler
+                ),
+                IndexPayments(
+                  payments: _payments,
+                  getPayments: _getPayments,
+                  loadingHandler: _loadingHandler,
+                ),
+                CurrentUser(),
+              ]
+            ),
+          ],
+        ),
       ),
       bottomSheet: Row(
         mainAxisAlignment: MainAxisAlignment.center,
