@@ -125,43 +125,58 @@ class _LoginPage extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).primaryColor,
       body: ClipRect(
         child: Stack(
           fit: StackFit.expand,
           overflow: Overflow.clip,
           children: <Widget>[
             OverlayLoadingMolecules(isVisible: _isLoading),
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Container(
-                    child: const Text(
-                      'ようこそ',
-                      style: TextStyle(
-                        fontSize: 50,
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20.0),
+                gradient: const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment(0.9, 0.0),
+                  colors: [
+                    Colors.teal,
+                    Colors.green,
+                  ],
+                ),
+              ),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Container(
+                      child: const Text(
+                        'ようこそ',
+                        style: TextStyle(
+                          fontSize: 50,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.all(20.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        SignInButton(
-                          Buttons.Google,
-                          text: 'Googleでログイン',
-                          onPressed: _signIn,
-                        ),
-                        SignInButton(
-                          Buttons.Google,
-                          text: 'Googleでアカウント作成',
-                          onPressed: _signUp,
-                        ),
-                      ]
+                    Container(
+                      margin: const EdgeInsets.all(20.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          SignInButton(
+                            Buttons.Google,
+                            text: 'Googleでログイン',
+                            onPressed: _signIn,
+                          ),
+                          SignInButton(
+                            Buttons.Google,
+                            text: 'Googleでアカウント作成',
+                            onPressed: _signUp,
+                          ),
+                        ]
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],
