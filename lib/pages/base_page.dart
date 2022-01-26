@@ -33,10 +33,10 @@ class _BasePageState extends State<BasePage> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    _pageController = PageController();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     _getPayments();
+    _pageController = PageController();
   }
 
   @override
