@@ -88,15 +88,15 @@ class _BasePageState extends State<BasePage> {
         items: const [
           BottomNavigationBarItem( // call each bottom item
             icon: Icon(Icons.create),
-            title: Text('入力'),
+            label: '入力',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.list),
-            title: Text('履歴'),
+            label: '履歴',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            title: Text('マイページ'))
+            label: 'マイページ')
         ],
       ),
     );

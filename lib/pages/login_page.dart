@@ -70,58 +70,6 @@ class _LoginPage extends State<LoginPage> {
     }
   }
 
-  void _signUp() async {
-    _loadingHandler(true);
-    GoogleSignInAccount? signinAccount = await googleLogin.signIn();
-    if (signinAccount == null) return;
-    GoogleSignInAuthentication auth =
-        await signinAccount.authentication;
-    final OAuthCredential credential = GoogleAuthProvider.credential(
-      idToken: auth.idToken,
-      accessToken: auth.accessToken,
-    );
-    User? user =
-        (await FirebaseAuth.instance.signInWithCredential(credential))
-            .user;
-    if (user != null) {
-      String token = await user.getIdToken();
-      final res = await KakeiboServerClient.signUp(
-        token,
-        user.displayName,
-        user.email
-      );
-      _loadingHandler(false);
-      if (res['status'] == 200) {
-        await Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) {
-            return BasePage();
-          }),
-        );
-      }else{
-        showDialog(
-          context: context,
-          builder: (_) {
-            return AlertDialog(
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const <Widget>[
-                  Text("エラー"),
-                ]
-              ),
-              content: Text(res['message']),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text("OK"),
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ],
-            );
-          },
-        );
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -136,8 +84,8 @@ class _LoginPage extends State<LoginPage> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20.0),
                 gradient: const LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment(0.9, 0.0),
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                   colors: [
                     Colors.teal,
                     Colors.green,
@@ -166,11 +114,6 @@ class _LoginPage extends State<LoginPage> {
                             Buttons.GoogleDark,
                             text: 'Googleでログイン',
                             onPressed: _signIn,
-                          ),
-                          SignInButton(
-                            Buttons.GoogleDark,
-                            text: 'Googleでアカウント作成',
-                            onPressed: _signUp,
                           ),
                         ]
                       ),
