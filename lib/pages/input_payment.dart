@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 import 'package:kakeibo_app/modules/kakeibo_server_client.dart';
 
 class InputPayment extends StatefulWidget {
   InputPayment({
     Key? key,
     required this.loadingHandler,
+    required this.insertPayment,
   }) : super(key: key);
 
   final loadingHandler;
+  final insertPayment;
   @override
   _InputPaymentState createState() => _InputPaymentState();
 }
@@ -22,6 +25,28 @@ class _InputPaymentState extends State<InputPayment> {
     v != null ? _isIncome = v : _isIncome = false;
   });
 
+  void _incomeHandler(bool v) {
+    setState(() {
+      _isIncome = v;
+    });
+  }
+
+  Widget _toggleButton(bool v, String text) {
+    if(v == _isIncome) {
+      return ElevatedButton(
+        onPressed: () {},
+        child: Text(text),
+      );
+    }else{
+      return OutlinedButton(
+        onPressed:() {
+          _incomeHandler(v);
+        },
+        child: Text(text),
+      );
+    }
+  }
+
   void _changePrice(price) {
     setState(() {
       _price = price;
@@ -30,6 +55,12 @@ class _InputPaymentState extends State<InputPayment> {
 
   void _submitValue() async {
     widget.loadingHandler(true);
+    widget.insertPayment({
+      'is_income': _isIncome,
+      'price': int.parse(_price),
+      'created_at': DateFormat('yyyy-MM-ddThh:mm:ss').format(DateTime.now()),
+    });
+    print(DateFormat('yyyy/M/d').format(DateTime.now()));
     String token = await FirebaseAuth.instance.currentUser!.getIdToken();
     final res = await KakeiboServerClient.createPayment(token, int.parse(_price), _isIncome);
     widget.loadingHandler(false);
@@ -87,20 +118,8 @@ class _InputPaymentState extends State<InputPayment> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Radio(
-                activeColor: Theme.of(context).primaryColor,
-                value: false,
-                groupValue: _isIncome,
-                onChanged: _handleRadio,
-              ),
-              const Text('支出'),
-              Radio(
-                activeColor: Colors.blue,
-                value: true,
-                groupValue: _isIncome,
-                onChanged: _handleRadio,
-              ),
-              const Text('収入'),
+              _toggleButton(false, '支出'),
+              _toggleButton(true, '収入'),
             ]
           ),
           Row(
@@ -123,11 +142,10 @@ class _InputPaymentState extends State<InputPayment> {
               ),
             ]
           ),
-          RaisedButton(
+          ElevatedButton(
             onPressed: _price == '' ? null :  () {
               _submitValue();
             },
-            color: Theme.of(context).primaryColor,
             child: const Text(
               '保存',
               style: TextStyle(

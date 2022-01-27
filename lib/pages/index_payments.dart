@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class IndexPayments extends StatefulWidget {
   IndexPayments({
@@ -16,7 +17,7 @@ class IndexPayments extends StatefulWidget {
 }
 
 class _IndexPayments extends State<IndexPayments> {
-  Widget _paymentItem(int price, bool isIncome) {
+  Widget _paymentItem(int price, bool isIncome, DateTime createdAt) {
     return GestureDetector(
       child:Container(
         padding: const EdgeInsets.all(15.0),
@@ -28,9 +29,9 @@ class _IndexPayments extends State<IndexPayments> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            const Text(
-              'yyyy/mm/dd hh:mm',
-              style: TextStyle(
+            Text(
+              DateFormat('yyyy/M/d').format(createdAt),
+              style: const TextStyle(
                 fontSize: 20,
               ),
             ),
@@ -56,7 +57,7 @@ class _IndexPayments extends State<IndexPayments> {
       child: ListView(
         physics: const AlwaysScrollableScrollPhysics(),
         children: widget.payments != [] ? widget.payments.map((v) =>
-          _paymentItem(v['price'], v['is_income'])
+          _paymentItem(v['price'], v['is_income'], DateTime.parse(v['created_at']))
         ).toList():
         <Widget>[const Text('Loading now...')],
       ),

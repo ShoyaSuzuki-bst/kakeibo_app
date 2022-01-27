@@ -26,6 +26,12 @@ class _BasePageState extends State<BasePage> {
     });
   }
 
+  void _insertPayments(payment) async {
+    setState(() {
+      _payments.insert(0, payment);
+    });
+  }
+
   void _loadingHandler(bool v) {
     setState(() {
       _isLoading = v;
@@ -60,7 +66,8 @@ class _BasePageState extends State<BasePage> {
               },
               children: [
                 InputPayment(
-                  loadingHandler: _loadingHandler
+                  loadingHandler: _loadingHandler,
+                  insertPayment: _insertPayments,
                 ),
                 IndexPayments(
                   payments: _payments,

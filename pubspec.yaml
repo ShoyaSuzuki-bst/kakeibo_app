@@ -41,6 +41,7 @@ dependencies:
   flutter_signin_button: ^2.0.0
   http: ^0.13.4
   google_mobile_ads: ^1.0.1
+  intl: ^0.17.0
 
 
 dev_dependencies:
