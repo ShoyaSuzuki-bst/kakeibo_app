@@ -60,7 +60,6 @@ class _InputPaymentState extends State<InputPayment> {
       'price': int.parse(_price),
       'created_at': DateFormat('yyyy-MM-ddThh:mm:ss').format(DateTime.now()),
     });
-    print(DateFormat('yyyy/M/d').format(DateTime.now()));
     String token = await FirebaseAuth.instance.currentUser!.getIdToken();
     final res = await KakeiboServerClient.createPayment(token, int.parse(_price), _isIncome);
     widget.loadingHandler(false);
@@ -77,7 +76,7 @@ class _InputPaymentState extends State<InputPayment> {
             ),
             content: const Text('保存しました。'),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 child: const Text("OK"),
                 onPressed: () => Navigator.pop(context),
               ),
@@ -98,7 +97,7 @@ class _InputPaymentState extends State<InputPayment> {
             ),
             content: Text(res['message']),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 child: const Text("OK"),
                 onPressed: () => Navigator.pop(context),
               ),
