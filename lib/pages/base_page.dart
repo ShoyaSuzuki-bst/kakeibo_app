@@ -16,6 +16,7 @@ class _BasePageState extends State<BasePage> {
   int _index = 0;
   List _payments = [];
   bool _isLoading = false;
+  String _title = '家計簿アプリ';
   PageController _pageController = PageController();
 
   void _getPayments() async {
@@ -23,6 +24,12 @@ class _BasePageState extends State<BasePage> {
     final res = await KakeiboServerClient.getPayments(token);
     setState(() {
       _payments = res['data'];
+    });
+  }
+
+  void _changeTitle(String title) {
+    setState(() {
+      _title = title;
     });
   }
 
@@ -58,10 +65,11 @@ class _BasePageState extends State<BasePage> {
           children: <Widget>[
             OverlayLoadingMolecules(isVisible: _isLoading),
             PageView(
+              physics: const NeverScrollableScrollPhysics(),
               controller: _pageController,
               onPageChanged: (int index) {
                 setState(() {
-                  this._index = index;
+                  _index = index;
                 });
               },
               children: [
