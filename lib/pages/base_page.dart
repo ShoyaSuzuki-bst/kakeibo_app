@@ -13,10 +13,16 @@ class BasePage extends StatefulWidget {
 }
 
 class _BasePageState extends State<BasePage> {
+  final List _pageTitles = [
+    '収支入力',
+    '履歴',
+    'マイページ'
+  ];
   int _index = 0;
   List _payments = [];
   bool _isLoading = false;
-  String _title = '家計簿アプリ';
+  bool _isEnableBottomSheet = false;
+  String _title = '収支入力';
   PageController _pageController = PageController();
 
   void _getPayments() async {
@@ -27,15 +33,30 @@ class _BasePageState extends State<BasePage> {
     });
   }
 
-  void _changeTitle(String title) {
+  void _toggleBottomSheet(bool v) {
     setState(() {
-      _title = title;
+      _isEnableBottomSheet = v;
     });
   }
 
-  void _insertPayments(payment) async {
+  void _updatePayment(int id, payment) {
+    final index = _payments.indexWhere((p) => p['id'] == id);
+    setState(() {
+      _payments.removeAt(index);
+      _payments.insert(index, payment);
+    });
+  }
+
+  void _insertPayments(payment) {
     setState(() {
       _payments.insert(0, payment);
+    });
+  }
+
+  void _deletePayment(int id) async {
+    final index = _payments.indexWhere((p) => p['id'] == id);
+    setState(() {
+      _payments.removeAt(index);
     });
   }
 
@@ -56,7 +77,7 @@ class _BasePageState extends State<BasePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Flutter App'),
+        title: Text(_title),
       ),
       body: ClipRect(
         child: Stack(
@@ -70,6 +91,7 @@ class _BasePageState extends State<BasePage> {
               onPageChanged: (int index) {
                 setState(() {
                   _index = index;
+                  _title = _pageTitles[index];
                 });
               },
               children: [
@@ -81,6 +103,9 @@ class _BasePageState extends State<BasePage> {
                   payments: _payments,
                   getPayments: _getPayments,
                   loadingHandler: _loadingHandler,
+                  updatePayment: _updatePayment,
+                  deletePayment: _deletePayment,
+                  toggleBottomSheet: _toggleBottomSheet,
                 ),
                 CurrentUser(),
               ]
@@ -88,30 +113,32 @@ class _BasePageState extends State<BasePage> {
           ],
         ),
       ),
-      bottomSheet: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
+      bottomNavigationBar: _isEnableBottomSheet ? null : Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget> [
           BottomBannerAd(),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: (int index) { // define animation
-          _pageController.animateToPage(index,
-              duration: const Duration(milliseconds: 10), curve: Curves.ease);
-        },
-        currentIndex: _index,
-        items: const [
-          BottomNavigationBarItem( // call each bottom item
-            icon: Icon(Icons.create),
-            label: '入力',
+          BottomNavigationBar(
+            onTap: (int index) { // define animation
+              _pageController.animateToPage(index,
+                  duration: const Duration(milliseconds: 10), curve: Curves.ease);
+            },
+            currentIndex: _index,
+            items: const [
+              BottomNavigationBarItem( // call each bottom item
+                icon: Icon(Icons.create),
+                label: '入力',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.list),
+                label: '履歴',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: 'マイページ'
+              )
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            label: '履歴',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'マイページ')
         ],
       ),
     );

@@ -77,6 +77,26 @@ class KakeiboServerClient {
     return decodedRes;
   }
 
+  static Future<Map<String, dynamic>> updatePayment(token, id, price, isIncome) async {
+    final headers = {
+      "Content-Type": "application/json",
+      'authorization': "Bearer $token"
+    };
+    final Map<String, dynamic> body = {
+      'price': price,
+      'is_income': isIncome
+    };
+    final encodedBody = json.encode(body);
+    final res = await http.put(
+      Uri.parse("$baseUri/payments/$id"),
+      headers: headers,
+      body: encodedBody
+    );
+    var decodedRes = await json.decode(res.body);
+    decodedRes['status'] = res.statusCode;
+    return decodedRes;
+  }
+
   static Future<Map<String, dynamic>> getPayments(token) async {
     Map<String, dynamic> result = {};
     final headers = {
@@ -90,5 +110,19 @@ class KakeiboServerClient {
     result['data'] = await json.decode(res.body);
     result['status'] = res.statusCode;
     return result;
+  }
+
+  static Future<Map<String, dynamic>> deletePayment(token, id) async {
+    final headers = {
+      "Content-Type": "application/json",
+      'authorization': "Bearer $token"
+    };
+    final res = await http.delete(
+      Uri.parse("$baseUri/payments/$id"),
+      headers: headers
+    );
+    var decodedRes = await json.decode(res.body);
+    decodedRes['status'] = res.statusCode;
+    return decodedRes;
   }
 }
