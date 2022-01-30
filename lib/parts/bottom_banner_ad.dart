@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:kakeibo_app/modules/admob_module.dart';
 
