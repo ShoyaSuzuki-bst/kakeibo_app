@@ -11,10 +11,10 @@ class BottomBannerAd extends StatefulWidget {
 
 class _BottomBannerAd extends State<BottomBannerAd> {
   final BannerAd bottomBannerAd = BannerAd(
-    adUnitId: AdmobModule.getTestAdBannerUnitId(),
+    adUnitId: AdmobModule.getAdBannerUnitId(),
     size: AdSize.banner,
-    request: AdRequest(),
-    listener: BannerAdListener(),
+    request: const AdRequest(),
+    listener: const BannerAdListener(),
   );
 
   @override

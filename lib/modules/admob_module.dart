@@ -12,4 +12,16 @@ class AdmobModule {
     }
     return testBannerUnitId;
   }
+
+  static String getAdBannerUnitId() {
+    String bannerUnitId = "";
+    if (Platform.isAndroid) {
+      // Android のとき
+      bannerUnitId = "ca-app-pub-1782649289767849/9836320394"; // Androidの本番環境用バナー広告ID
+    } else if (Platform.isIOS) {
+      // iOSのとき
+      bannerUnitId = "ca-app-pub-1782649289767849/7325707123"; // iOSの本番環境用バナー広告ID
+    }
+    return bannerUnitId;
+  }
 }
