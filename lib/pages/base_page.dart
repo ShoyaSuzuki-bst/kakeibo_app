@@ -75,71 +75,76 @@ class _BasePageState extends State<BasePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_title),
-      ),
-      body: ClipRect(
-        child: Stack(
-          fit: StackFit.expand,
-          overflow: Overflow.clip,
-          children: <Widget>[
-            OverlayLoadingMolecules(isVisible: _isLoading),
-            PageView(
-              physics: const NeverScrollableScrollPhysics(),
-              controller: _pageController,
-              onPageChanged: (int index) {
-                setState(() {
-                  _index = index;
-                  _title = _pageTitles[index];
-                });
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(_title),
+        ),
+        body: ClipRect(
+          child: Stack(
+            fit: StackFit.expand,
+            overflow: Overflow.clip,
+            children: <Widget>[
+              OverlayLoadingMolecules(isVisible: _isLoading),
+              PageView(
+                physics: const NeverScrollableScrollPhysics(),
+                controller: _pageController,
+                onPageChanged: (int index) {
+                  setState(() {
+                    _index = index;
+                    _title = _pageTitles[index];
+                  });
+                },
+                children: [
+                  InputPayment(
+                    loadingHandler: _loadingHandler,
+                    insertPayment: _insertPayments,
+                  ),
+                  IndexPayments(
+                    payments: _payments,
+                    getPayments: _getPayments,
+                    loadingHandler: _loadingHandler,
+                    updatePayment: _updatePayment,
+                    deletePayment: _deletePayment,
+                    toggleBottomSheet: _toggleBottomSheet,
+                  ),
+                  CurrentUser(),
+                ]
+              ),
+            ],
+          ),
+        ),
+        bottomNavigationBar: _isEnableBottomSheet ? null : Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget> [
+            BottomBannerAd(),
+            BottomNavigationBar(
+              onTap: (int index) { // define animation
+                _pageController.animateToPage(index,
+                    duration: const Duration(milliseconds: 10), curve: Curves.ease);
               },
-              children: [
-                InputPayment(
-                  loadingHandler: _loadingHandler,
-                  insertPayment: _insertPayments,
+              currentIndex: _index,
+              items: const [
+                BottomNavigationBarItem( // call each bottom item
+                  icon: Icon(Icons.create),
+                  label: '入力',
                 ),
-                IndexPayments(
-                  payments: _payments,
-                  getPayments: _getPayments,
-                  loadingHandler: _loadingHandler,
-                  updatePayment: _updatePayment,
-                  deletePayment: _deletePayment,
-                  toggleBottomSheet: _toggleBottomSheet,
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.list),
+                  label: '履歴',
                 ),
-                CurrentUser(),
-              ]
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: 'マイページ'
+                )
+              ],
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: _isEnableBottomSheet ? null : Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget> [
-          BottomBannerAd(),
-          BottomNavigationBar(
-            onTap: (int index) { // define animation
-              _pageController.animateToPage(index,
-                  duration: const Duration(milliseconds: 10), curve: Curves.ease);
-            },
-            currentIndex: _index,
-            items: const [
-              BottomNavigationBarItem( // call each bottom item
-                icon: Icon(Icons.create),
-                label: '入力',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.list),
-                label: '履歴',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: 'マイページ'
-              )
-            ],
-          ),
-        ],
       ),
     );
   }

@@ -26,6 +26,7 @@ class InputPayment extends StatefulWidget {
 class _InputPaymentState extends State<InputPayment> {
   bool _isIncome = false;
   String _price = '';
+  late TextEditingController _controller;
 
   @override
   void initState() {
@@ -36,6 +37,7 @@ class _InputPaymentState extends State<InputPayment> {
         _price = "${widget.paymentData['price']}";
       });
     }
+    _controller = TextEditingController(text: _price);
   }
 
   void _handleRadio(bool? v) => setState(() {
@@ -229,8 +231,7 @@ class _InputPaymentState extends State<InputPayment> {
                 child: TextField(
                   keyboardType: TextInputType.number,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  autofocus: true,
-                  controller: TextEditingController(text: _price),
+                  controller: _controller,
                   onChanged: (text) {
                     _changePrice(text);
                   },
@@ -243,6 +244,7 @@ class _InputPaymentState extends State<InputPayment> {
           ),
           ElevatedButton(
             onPressed: _price == '' ? null :  () {
+              FocusScope.of(context).unfocus();
               _submitValue();
             },
             child: const Text(

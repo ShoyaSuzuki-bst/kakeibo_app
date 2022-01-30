@@ -27,16 +27,20 @@ class _IndexPayments extends State<IndexPayments> {
   void _showEditPaymentDialog(id, price, isIncome) {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       builder: (BuildContext context) {
-        return InputPayment(
-          loadingHandler: widget.loadingHandler,
-          updatePayment: widget.updatePayment,
-          deletePayment: widget.deletePayment,
-          paymentData: {
-            'price': price,
-            'isIncome': isIncome,
-            'id': id,
-          },
+        return SizedBox(
+          height: 600,
+          child: InputPayment(
+            loadingHandler: widget.loadingHandler,
+            updatePayment: widget.updatePayment,
+            deletePayment: widget.deletePayment,
+            paymentData: {
+              'price': price,
+              'isIncome': isIncome,
+              'id': id,
+            },
+          )
         );
       },
     );
