@@ -20,8 +20,21 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.438806987626-qr9lt4hbkjpnl8jg671b1ldfmv4u1ulf</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-1782649289767849~8101223438</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -41,20 +54,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>GADApplicationIdentifier</key>
-	<string>ca-app-pub-1782649289767849~8101223438</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>CFBundleURLTypes</key>
-	<array>
-			<dict>
-					<key>CFBundleTypeRole</key>
-					<string>Editor</string>
-					<key>CFBundleURLSchemes</key>
-					<array>
-							<string>com.googleusercontent.apps.438806987626-qr9lt4hbkjpnl8jg671b1ldfmv4u1ulf</string>
-					</array>
-			</dict>
-	</array>
 </dict>
 </plist>

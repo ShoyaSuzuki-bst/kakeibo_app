@@ -2,7 +2,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class KakeiboServerClient {
-  static String baseUri = 'http://192.168.0.21:3000';
+  static String baseUri = 'https://cryptic-plains-32519.herokuapp.com/';
 
   static Future<Map<String, dynamic>> signUp(token, name, email) async {
     final headers = {'authorization': "Bearer $token"};
