@@ -48,6 +48,7 @@ class _LoginPage extends State<LoginPage> {
 
   void _checkSignInResult(User? user) async {
     if (user != null) {
+      _showLoadingDialog();
       String token = await user.getIdToken();
       final res = await KakeiboServerClient.getUser(token);
       Navigator.pop(context);
@@ -96,9 +97,9 @@ class _LoginPage extends State<LoginPage> {
         accessToken: auth.accessToken,
       );
       User? user = (await FirebaseAuth.instance.signInWithCredential(credential)).user;
+      Navigator.pop(context);
       _checkSignInResult(user);
     } on Exception catch (e) {
-      Navigator.pop(context);
       showDialog(
         context: context,
         builder: (_) {
@@ -155,9 +156,9 @@ class _LoginPage extends State<LoginPage> {
       );
 
       User? user = (await FirebaseAuth.instance.signInWithCredential(oauthCredential)).user;
+      Navigator.pop(context);
       _checkSignInResult(user);
     } catch (e) {
-      Navigator.pop(context);
       showDialog(
         context: context,
         builder: (_) {
