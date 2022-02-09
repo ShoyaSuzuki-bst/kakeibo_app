@@ -23,6 +23,11 @@ class _LoginPage extends State<LoginPage> {
     'https://www.googleapis.com/auth/contacts.readonly',
   ]);
 
+  String _displayName = '';
+  String _email = '';
+  String _password = '';
+  bool _isRegistration = true;
+
   bool _isLoading = false;
 
   void _loadingHandler(bool v) {
@@ -83,23 +88,17 @@ class _LoginPage extends State<LoginPage> {
     }
   }
 
-  void _signInWithGoogle() async {
-    _showLoadingDialog();
-    try{
-      GoogleSignInAccount? signinAccount = await googleLogin.signIn();
-      if (signinAccount == null) {
-        Navigator.pop(context);
-        return;
-      }
-      GoogleSignInAuthentication auth = await signinAccount.authentication;
-      final OAuthCredential credential = GoogleAuthProvider.credential(
-        idToken: auth.idToken,
-        accessToken: auth.accessToken,
-      );
-      User? user = (await FirebaseAuth.instance.signInWithCredential(credential)).user;
+  void _signInWithEmail() async {
+    try {
+      _showLoadingDialog();
+      User? user = (await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _email,
+        password: _password,
+      )).user;
       Navigator.pop(context);
       _checkSignInResult(user);
-    } on Exception catch (e) {
+    } catch (e) {
+      Navigator.pop(context);
       showDialog(
         context: context,
         builder: (_) {
@@ -122,6 +121,82 @@ class _LoginPage extends State<LoginPage> {
       );
     }
   }
+
+  void _RegistrationWithEmail() async {
+    try {
+      _showLoadingDialog();
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _email,
+        password: _password,
+      );
+      await FirebaseAuth.instance.currentUser!.updateDisplayName(_displayName);
+      User? user = await FirebaseAuth.instance.currentUser;
+      Navigator.pop(context);
+      _checkSignInResult(user);
+    } catch (e) {
+      Navigator.pop(context);
+      showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const <Widget>[
+                Text("エラー"),
+              ]
+            ),
+            content: Text("$e"),
+            actions: <Widget>[
+              TextButton(
+                child: const Text("OK"),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  // void _signInWithGoogle() async {
+  //   _showLoadingDialog();
+  //   try{
+  //     GoogleSignInAccount? signinAccount = await googleLogin.signIn();
+  //     if (signinAccount == null) {
+  //       Navigator.pop(context);
+  //       return;
+  //     }
+  //     GoogleSignInAuthentication auth = await signinAccount.authentication;
+  //     final OAuthCredential credential = GoogleAuthProvider.credential(
+  //       idToken: auth.idToken,
+  //       accessToken: auth.accessToken,
+  //     );
+  //     User? user = (await FirebaseAuth.instance.signInWithCredential(credential)).user;
+  //     Navigator.pop(context);
+  //     _checkSignInResult(user);
+  //   } on Exception catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (_) {
+  //         return AlertDialog(
+  //           title: Row(
+  //             mainAxisAlignment: MainAxisAlignment.center,
+  //             children: const <Widget>[
+  //               Text("エラー"),
+  //             ]
+  //           ),
+  //           content: Text("$e"),
+  //           actions: <Widget>[
+  //             TextButton(
+  //               child: const Text("OK"),
+  //               onPressed: () => Navigator.pop(context),
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
 
   String generateNonce([int length = 32]) {
     const charset = '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
@@ -184,51 +259,207 @@ class _LoginPage extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20.0),
-          gradient: const LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Colors.teal,
-              Colors.green,
-            ],
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Colors.teal,
+                Colors.green,
+              ],
+            ),
           ),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              Container(
-                child: const Text(
-                  'ようこそ',
-                  style: TextStyle(
-                    fontSize: 50,
-                    color: Colors.white,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Container(
+                  child: Column(
+                    children: <Widget> [
+                      const Text(
+                        'Kakeiboへようこそ',
+                        style: TextStyle(
+                          fontSize: 25,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 50,
+                      ),
+                      SizedBox(
+                        width: 300,
+                        child: Column(
+                          children: <Widget> [
+                            if (_isRegistration) TextFormField(
+                              cursorColor: Colors.white,
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                              decoration: const InputDecoration(
+                                focusColor: Colors.white,
+                                labelText: "ユーザー名",
+                                labelStyle: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                ),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              onChanged: (String v) {
+                                setState(() {
+                                  _displayName = v;
+                                });
+                              },
+                            ),
+                            TextFormField(
+                              cursorColor: Colors.white,
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                              decoration: const InputDecoration(
+                                focusColor: Colors.white,
+                                labelText: "メールアドレス",
+                                labelStyle: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                ),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              onChanged: (String v) {
+                                setState(() {
+                                  _email = v;
+                                });
+                              },
+                            ),
+                            TextFormField(
+                              cursorColor: Colors.white,
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                              obscureText: true,
+                              decoration: const InputDecoration(
+                                focusColor: Colors.white,
+                                labelText: "パスワード",
+                                labelStyle: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                ),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              onChanged: (String v) {
+                                setState(() {
+                                  _password = v;
+                                });
+                              },
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            _isRegistration ? ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.white, // background
+                                onPrimary: Colors.green.shade900, // foreground
+                              ),
+                              child: const Text('新規登録'),
+                              onPressed: () {
+                                _RegistrationWithEmail();
+                              },
+                            ) : ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.white, // background
+                                onPrimary: Colors.green.shade900, // foreground
+                              ),
+                              child: const Text('ログイン'),
+                              onPressed: () {
+                                _signInWithEmail();
+                              },
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _displayName = '';
+                                  _email = '';
+                                  _password = '';
+                                  _isRegistration = !_isRegistration;
+                                });
+                              },
+                              child: _isRegistration ? const Text(
+                                'ログインはこちら',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  decoration: TextDecoration.underline,
+                                )
+                              ) : const Text(
+                                '新規登録はこちら',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  decoration: TextDecoration.underline,
+                                )
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ]
                   ),
                 ),
-              ),
-              Container(
-                margin: const EdgeInsets.all(20.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    SignInButton(
-                      Buttons.Google,
-                      text: 'Googleでログイン',
-                      onPressed: _signInWithGoogle,
-                    ),
-                    if (Platform.isIOS) SignInButton(
-                      Buttons.AppleDark,
-                      text: 'Appleでログイン',
-                      onPressed: _signInWithApple,
-                    ),
-                  ]
+                Container(
+                  margin: const EdgeInsets.all(20.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      // Google OAuthの申請が通らなさすぎてムカつくのでコメントアウト
+                      // SignInButton(
+                      //   Buttons.Google,
+                      //   text: 'Googleでログイン',
+                      //   onPressed: _signInWithGoogle,
+                      // ),
+                      if (Platform.isIOS) SignInButton(
+                        Buttons.AppleDark,
+                        text: 'Appleでログイン',
+                        onPressed: _signInWithApple,
+                      ),
+                    ]
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
