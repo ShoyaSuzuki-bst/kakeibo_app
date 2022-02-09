@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.green,
@@ -23,12 +24,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.green,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: GestureDetector(
-        onTap: () {
-          // FocusScope.of(context).unfocus();
-        },
-        child: StartingPage(),
-      ),
+      home: StartingPage(),
     );
   }
 }

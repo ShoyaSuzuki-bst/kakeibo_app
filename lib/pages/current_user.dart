@@ -14,15 +14,22 @@ class _CurrentUser extends State<CurrentUser> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Card(
         child: Container(
           padding: const EdgeInsets.all(20),
-          height: 300,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               const Icon(Icons.person, size: 100),
-              Text("${FirebaseAuth.instance.currentUser!.displayName}", style: TextStyle(fontSize: 50)),
+              SizedBox(
+                height: 200,
+                child: Text(
+                  "${FirebaseAuth.instance.currentUser!.displayName}",
+                  style: const TextStyle(
+                    fontSize: 20
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
               const SizedBox(height: 20),
               TextButton(
                 onPressed: () async {
@@ -37,7 +44,6 @@ class _CurrentUser extends State<CurrentUser> {
             ],
           ),
         ),
-      ),
     );
   }
 }
