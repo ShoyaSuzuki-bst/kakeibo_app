@@ -24,12 +24,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.green,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: GestureDetector(
-        onTap: () {
-          // FocusScope.of(context).unfocus();
-        },
-        child: StartingPage(),
-      ),
+      home: StartingPage(),
     );
   }
 }
